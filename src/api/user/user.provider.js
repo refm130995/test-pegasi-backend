@@ -3,7 +3,7 @@
 import UserModel from './user.model';
 import jwt from '../../config/jwt';
 import bcrypt from 'bcryptjs';
-
+import moment from 'moment';
 const GetRefererKey = (firstname, lastname) => {
     let first = firstname.split('')
     first = first[0] + first[1] + first[2]
@@ -14,6 +14,7 @@ const GetRefererKey = (firstname, lastname) => {
 
     return first + Math.floor(Math.random() * 1000) + last
 }
+
 export default {
 
     async Register(body) {
@@ -22,6 +23,18 @@ export default {
                 email: body.email
             }).exec()
             if (!findUser) {
+                var dateActual = moment();
+                var yearRegistro = moment(body.birthDate, 'YYYY');
+                var diff = dateActual.year - yearRegistro;
+               /*  if (diff !== body.age || diff !== body.age+1){
+                    throw {
+                        code: 400,
+                        error: 'Selected age does not match date of birth'
+                    }
+                } */
+                if(body.gender == 'Masculino'){
+                    body.pregnant = false;
+                }
                 body.password = bcrypt.hashSync(body.password, 10);
                 body.referer_id = await GetRefererKey(body.firstname, body.lastname)
                 let user = new UserModel(body);
@@ -62,6 +75,7 @@ export default {
             throw error;
         }
     },
+    
     async GetUserLogin(id) {
         try {
             return UserModel.findById(id).exec();
