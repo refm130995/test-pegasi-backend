@@ -23,15 +23,17 @@ export default {
                 email: body.email
             }).exec()
             if (!findUser) {
-                var dateActual = moment();
-                var yearRegistro = moment(body.birthDate, 'YYYY');
-                var diff = dateActual.year - yearRegistro;
-               /*  if (diff !== body.age || diff !== body.age+1){
+                var dateActual = parseInt(moment().format('YYYY'));
+                var diff = dateActual - body.birthDate.year;
+                console.log(dateActual);
+                console.log(diff);
+                console.log(body.birthDate.year);
+                 if ( diff != parseInt(body.age)+1 && diff != parseInt(body.age)){
                     throw {
                         code: 400,
                         error: 'Selected age does not match date of birth'
                     }
-                } */
+                } 
                 if(body.gender == 'Masculino'){
                     body.pregnant = false;
                 }
